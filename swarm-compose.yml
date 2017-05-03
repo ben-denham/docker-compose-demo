@@ -1,0 +1,29 @@
+version: "3"
+services:
+  web:
+    image: training/webapp
+    ports:
+      - "5000:5000"
+    networks:
+      - webnet
+    deploy:
+      replicas: 4
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+  redis:
+    image: redis
+    ports:
+      - "6379:6739"
+    volumes:
+      - ./data:/data
+    networks:
+      - webnet
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+networks:
+  webnet:
